@@ -4,10 +4,10 @@ namespace eval ::broomride::templates {
 
 	namespace export TempalteProcessor Template SUBSTITUTION CODE COMMENT TEXT
 
-	variable ::SUBSTITUTION	0
-	variable ::CODE			1
-	variable ::COMMENT		2
-	variable ::TEXT 		3
+	variable SUBSTITUTION	0
+	variable CODE			1
+	variable COMMENT		2
+	variable TEXT 			3
 
 
 	itcl::class ::TemplateProcessor {
@@ -39,7 +39,7 @@ namespace eval ::broomride::templates {
 							switch $command {
 								"foreach" {
 									set queue [list]
-									while {$type != $::CODE || $content ne "endfor"} {
+									while {$type != $::broomride::templates::CODE || $content ne "endfor"} {
 										lassign [pop_statement] type content
 										lappend queue [list $type $content]
 									}
@@ -55,11 +55,11 @@ namespace eval ::broomride::templates {
 								"if" {
 									set queue [list]
 									set previous_token {}
-									while {$type != $::CODE || $content ne "endif"} {
+									while {$type != $::broomride::templates::CODE || $content ne "endif"} {
 										lassign [pop_statement] type content
 										lappend queue [list $type $content]
 									}
-									set argprocessor [TemplateProcessor #auto [list [list $::TEXT $args]]]
+									set argprocessor [TemplateProcessor #auto [list [list $::broomride::templates::TEXT $args]]]
 									set args [$argprocessor process $context]
 									if ([expr $args]) {
 										set t [TemplateProcessor #auto $queue]
@@ -144,16 +144,16 @@ namespace eval ::broomride::templates {
 				set part [string range $template_str $start $end]
 				switch [string range $part 0 1] {
 					"\{\{" {
-						lappend tokenized_template [list $::SUBSTITUTION [string trim $part "\{\} "]]
+						lappend tokenized_template [list $::broomride::templates::SUBSTITUTION [string trim $part "\{\} "]]
 					}
 					"\{%" {
-						lappend tokenized_template [list $::CODE [string trim $part "\{%\} "]]
+						lappend tokenized_template [list $::broomride::templates::CODE [string trim $part "\{%\} "]]
 					}
 					"\{#" {
-						lappend tokenized_template [list $::COMMENT [string trim $part "\{#\} "]]
+						lappend tokenized_template [list $::broomride::templates::COMMENT [string trim $part "\{#\} "]]
 					}
 					default {
-						lappend tokenized_template [list $::TEXT $part]
+						lappend tokenized_template [list $::broomride::templates::TEXT $part]
 					}
 				}
 			}
