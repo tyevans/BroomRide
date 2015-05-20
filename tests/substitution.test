@@ -1,0 +1,48 @@
+# templates.test
+set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
+
+package require tcltest
+package require broomride 1.0 
+
+namespace import ::tcltest::*
+namespace import ::broomride::templates::*
+
+test template_single_substitution {
+	Test: Simple substitution of a single argument
+} -body {
+	set context [dict create foo "FOO"]
+	Template tmpl "{{foo}}"
+	set result [tmpl render $context]
+	itcl::delete object tmpl
+	return $result
+} -result "FOO"
+
+
+test template_multiple_substitutions {
+	Test: Substitution of multiple arguments
+} -body {
+	set context [dict create \
+		foo "FOO"\
+		bar "BAR"\
+		baz "BAZ"\
+	]
+	Template tmpl "{{foo}}{{bar}}{{baz}}"
+	set result [tmpl render $context]
+	itcl::delete object tmpl
+	return $result
+} -result "FOOBARBAZ"
+
+test template_substitution_beginning_and_end {
+	Test: Substitution at beginning and end of template
+} -body {
+	set context [dict create \
+		foo "FOO"\
+		bar "BAR"\
+	]
+	Template tmpl "{{foo}} This is other content {{bar}}"
+	set result [tmpl render $context]
+	itcl::delete object tmpl
+	return $result
+} -result "FOO This is other content BAR"
+
+cleanupTests
