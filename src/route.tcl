@@ -23,7 +23,7 @@ namespace eval ::broomride::route {
 		}
 
 		method handleRequest {request} {
-			return [[$this getView] handleRequest $request]
+			return [[$this getView] handleRequest [namespace which $request]]
 		}
 
 	}

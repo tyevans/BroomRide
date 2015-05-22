@@ -20,7 +20,7 @@ namespace eval ::broomride::view {
 				"OPTIONS" { set result [options $request] }
 				default { error "NotImplemented" }
 			}
-			return [namespace which $result]
+			return $result
 		}
 
 		method get {request} { error "NotImplemented" }
