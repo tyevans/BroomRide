@@ -18,8 +18,8 @@ namespace eval ::broomride::application {
 			set request [::broomride::request::HttpRequest #auto]
 			set route [getRoute $request]
 			if {[::itcl::is object $route]} {
-				set response [[$route getView] handleRequest $request]
-				if {![::itcl::is object $response]} {
+				set response [[$route getView] handleRequest [namespace which $request]]
+				if {![::itcl::is object [namespace which $response]]} {
 					set response [::broomride::response::HttpResponse #auto $response]
 				}
 			} else {
@@ -28,7 +28,7 @@ namespace eval ::broomride::application {
 			}
 
 
-			sendResponse $response
+			sendResponse [namespace which $response]
 			::itcl::delete object $request
 			if {[::itcl::is object $response]} {
 				::itcl::delete object $response

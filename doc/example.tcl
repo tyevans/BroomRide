@@ -1,5 +1,5 @@
 #!C:\Tcl\bin\tclsh.exe
-set auto_path [linsert $auto_path 0 {C:\Users\Tyler\workspace\BroomRide\src}]
+set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
 
 package require Itcl
 package require broomride 1.0
@@ -23,11 +23,9 @@ set DEBUG 1
 	inherit ::broomride::view::View
 
 	method handleRequest {request} {
-		uplevel 1 {
-			set response [HttpResponse #auto "404: Not Found"]
-			$response setHeaders [list "Status-Code" 404]
-			return $response
-		}
+		set response [HttpResponse #auto "404: Not Found"]
+		$response setHeaders [list "Status-Code" 404]
+		return [namespace which $response]
 	}
 }
 

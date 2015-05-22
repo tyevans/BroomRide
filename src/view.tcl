@@ -9,7 +9,7 @@ namespace eval ::broomride::view {
 		private variable REQUEST_METHODS [list "GET" "POST" "PUT" "DELETE" "HEAD"]
 
 		method handleRequest {request} {
-			set method [uplevel 1 $request getMethod]
+			set method [$request getMethod]
 
 			switch $method {
 				"GET" { set result [get $request] }
@@ -20,7 +20,7 @@ namespace eval ::broomride::view {
 				"OPTIONS" { set result [options $request] }
 				default { error "NotImplemented" }
 			}
-			return $result
+			return [namespace which $result]
 		}
 
 		method get {request} { error "NotImplemented" }
@@ -28,7 +28,6 @@ namespace eval ::broomride::view {
 		method put {request} { error "NotImplemented" }
 		method delete {resquest} { error "NotImplemented" }
 		method head {request} { error "NotImplemented" }
-
 	}
 
 	catch {::itcl::delete class TemplatedView}
