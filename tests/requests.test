@@ -1,0 +1,19 @@
+set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
+
+package require tcltest
+package require broomride 1.0 
+
+namespace import ::tcltest::*
+namespace import ::broomride::request::*
+
+test request_simple_init {
+	Test: request method can be set 
+} -body {
+	HttpRequest r "GET" [dict create] [dict create] ""
+	set result [r getMethod]
+	::itcl::delete object r
+	return $result
+} -result "GET"
+
+
+cleanupTests

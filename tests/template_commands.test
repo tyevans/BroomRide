@@ -1,11 +1,10 @@
-# templates.test
 set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
 
 package require tcltest
 package require broomride 1.0 
 
 namespace import ::tcltest::*
-namespace import ::broomride::templates::*
+namespace import ::broomride::template::*
 
 test template_simple_for_each {
 	Test: Repeat static text with foreach 
@@ -13,7 +12,7 @@ test template_simple_for_each {
 	set context [dict create foo [list 1 2 3]]
 	Template tmpl "{% foreach i in foo %}FOO{% endfor %}"
 	set result [tmpl render $context]
-	itcl::delete object tmpl
+	::itcl::delete object tmpl
 	return $result
 } -result "FOOFOOFOO"
 
@@ -24,7 +23,7 @@ test template_using_loop_variable {
 	set context [dict create foo [list 1 2 3]]
 	Template tmpl "{% foreach i in foo %}{{i}}{% endfor %}"
 	set result [tmpl render $context]
-	itcl::delete object tmpl
+	::itcl::delete object tmpl
 	return $result
 } -result "123"
 
@@ -35,7 +34,7 @@ test template_simple_if_statement_false {
 	set context [dict create]
 	Template tmpl "{% if 0 %}FOO{% endif %}"
 	set result [tmpl render $context]
-	itcl::delete object tmpl
+	::itcl::delete object tmpl
 	return $result
 } -result ""
 
@@ -45,7 +44,7 @@ test template_simple_if_statement_true {
 	set context [dict create]
 	Template tmpl "{% if 1 %}FOO{% endif %}"
 	set result [tmpl render $context]
-	itcl::delete object tmpl
+	::itcl::delete object tmpl
 	return $result
 } -result "FOO"
 
@@ -55,7 +54,7 @@ test template_nested_foreach {
 	set context [dict create foo [list [list 1 2 3] [list 1 2 3]]]
 	Template tmpl "{%foreach i in foo%}{%foreach j in i %}{{j}}{%endfor%}{%endfor%}"
 	set result [tmpl render $context]
-	itcl::delete object tmpl
+	::itcl::delete object tmpl
 	return $result
 } -result "123123"
 
@@ -65,7 +64,7 @@ test template_foreach_nested_if {
 	set context [dict create foo [list [list 1 2 3] [list 1 2 3]]]
 	Template tmpl "{%foreach i in foo%}{%if $i==1 %}{{j}}{%endif%}{%endfor%}"
 	set result [tmpl render $context]
-	itcl::delete object tmpl
+	::itcl::delete object tmpl
 	return $result
 } -result "123123"
 

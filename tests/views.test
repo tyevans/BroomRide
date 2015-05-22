@@ -1,0 +1,63 @@
+set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
+package require tcltest
+package require broomride 1.0 
+
+package require Itcl
+
+namespace import ::tcltest::*
+namespace import ::broomride::view::*
+namespace import ::broomride::request::*
+
+::itcl::class SimpleGetView {
+	inherit ::broomride::view::View
+
+	method get {request} {
+		return "true"
+	}
+}
+
+test view_calls_correct_method {
+	Test: views call the appropriate handler 
+} -body {
+	HttpRequest r "GET" [dict create] [dict create] ""
+	SimpleGetView view 
+	set result [view handle_request r]
+	::itcl::delete object r
+	::itcl::delete object view
+	return $result
+} -result "true"
+
+test view_unknown_request_method {
+	Test: views call the appropriate handler 
+} -body {
+	HttpRequest r "NOTAMETHOD" [dict create] [dict create] ""
+	SimpleGetView view
+	catch {view handle_request r} errMsg
+
+	::itcl::delete object r
+	::itcl::delete object view
+
+	if {$errMsg ne ""} {
+		error $errMsg
+	}
+
+} -returnCodes {error} -result "NotImplemented"
+
+test view_unsupported_request_method {
+	Test: views call the appropriate handler 
+} -body {
+	HttpRequest r "PUT" [dict create] [dict create] ""
+	SimpleGetView view
+	catch {view handle_request r} errMsg
+
+	::itcl::delete object r
+	::itcl::delete object view
+
+	if {$errMsg ne ""} {
+		error $errMsg
+	}
+
+} -returnCodes {error} -result "NotImplemented"
+
+
+cleanupTests
