@@ -24,7 +24,6 @@ set DEBUG 1
 
 	method handleRequest {request} {
 		set response [HttpResponse #auto "404: Not Found"]
-		$response setHeaders [list "Status-Code" 404]
 		return [namespace which $response]
 	}
 }
