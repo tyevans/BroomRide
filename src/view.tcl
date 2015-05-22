@@ -9,7 +9,7 @@ namespace eval ::broomride::view {
 		private variable REQUEST_METHODS [list "GET" "POST" "PUT" "DELETE" "HEAD"]
 
 		method handleRequest {request} {
-			set method [uplevel 2 $request getMethod]
+			set method [uplevel 1 $request getMethod]
 
 			switch $method {
 				"GET" { set result [get $request] }

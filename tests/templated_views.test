@@ -9,14 +9,4 @@ namespace import ::broomride::view::*
 namespace import ::broomride::request::*
 
 
-test request_simple_init {
-	Test: request method can be set 
-} -body {
-	HttpRequest r "GET" "/" [dict create] [dict create] ""
-	set result [r getMethod]
-	::itcl::delete object r
-	return $result
-} -result "TODO"
-
-
 cleanupTests

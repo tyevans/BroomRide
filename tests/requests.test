@@ -7,9 +7,10 @@ namespace import ::tcltest::*
 namespace import ::broomride::request::*
 
 test request_simple_init {
-	Test: request method can be set 
+	Test: request method can be read fropm env
 } -body {
-	HttpRequest r "GET" "/" [dict create] [dict create] ""
+	set ::env(REQUEST_METHOD) "GET"
+	HttpRequest r
 	set result [r getMethod]
 	::itcl::delete object r
 	return $result

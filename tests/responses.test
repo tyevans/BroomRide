@@ -34,6 +34,6 @@ test response_custom_headers {
 	set result [resp getHeaders]
 	::itcl::delete object resp
 	return $result
-} -result "X-Custom-Header: THISISCUSTOM\r\nContent-Type: text/html\r\n\r\n"
+} -result [list "X-Custom-Header" "THISISCUSTOM"]
 
 cleanupTests

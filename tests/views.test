@@ -19,9 +19,11 @@ namespace import ::broomride::request::*
 test view_calls_correct_method {
 	Test: views call the appropriate handler 
 } -body {
-	HttpRequest r "GET" "/" [dict create] [dict create] ""
+	set ::env(REQUEST_METHOD) "GET"
+	set ::env(REQUEST_URI) "/"
+	HttpRequest r
 	SimpleGetView view 
-	set result [view handle_request r]
+	set result [view handleRequest r]
 	::itcl::delete object r
 	::itcl::delete object view
 	return $result
@@ -30,9 +32,11 @@ test view_calls_correct_method {
 test view_unknown_request_method {
 	Test: views throw NotImplemented when encountering an unknown request method
 } -body {
-	HttpRequest r "NOTAMETHOD" "/" [dict create] [dict create] ""
+	set ::env(REQUEST_METHOD) "NOTAMETHOD"
+	set ::env(REQUEST_URI) "/"
+	HttpRequest r
 	SimpleGetView view
-	catch {view handle_request r} errMsg
+	catch {view handleRequest r} errMsg
 
 	::itcl::delete object r
 	::itcl::delete object view
@@ -46,9 +50,12 @@ test view_unknown_request_method {
 test view_unsupported_request_method {
 	Test: views throw NotImplemented when encountering an unsupported request method
 } -body {
-	HttpRequest r "PUT" "/" [dict create] [dict create] ""
+	set ::env(REQUEST_METHOD) "PUT"
+	set ::env(REQUEST_URI) "/"
+
+	HttpRequest r
 	SimpleGetView view
-	catch {view handle_request r} errMsg
+	catch {view handleRequest r} errMsg
 
 	::itcl::delete object r
 	::itcl::delete object view
