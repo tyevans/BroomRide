@@ -9,8 +9,6 @@ namespace eval ::broomride::template {
 	variable COMMENT		2
 	variable TEXT 			3
 
-
-	catch {::itcl::delete class TemplateProcessor}
 	::itcl::class TemplateProcessor {
 		private variable statements
 
@@ -84,8 +82,6 @@ namespace eval ::broomride::template {
 		}
 	}
 
-
-	catch {::itcl::delete class Template}
 	::itcl::class Template {
 		private variable template_str
 		private variable tokenized_template
