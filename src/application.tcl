@@ -68,8 +68,6 @@ namespace eval ::broomride::application {
 				}
 			}
 		}
-
-		method handle_request {} { error NotImplemented }
 	}
 }
 
