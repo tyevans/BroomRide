@@ -1,10 +1,13 @@
 set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
-
 package require tcltest
 package require broomride 1.0 
 
+package require Itcl
+
 namespace import ::tcltest::*
+namespace import ::broomride::view::*
 namespace import ::broomride::request::*
+
 
 test request_simple_init {
 	Test: request method can be set 
@@ -13,7 +16,7 @@ test request_simple_init {
 	set result [r getMethod]
 	::itcl::delete object r
 	return $result
-} -result "GET"
+} -result "TODO"
 
 
 cleanupTests

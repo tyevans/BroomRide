@@ -8,15 +8,19 @@ namespace eval ::broomride::view {
 	::itcl::class View {
 		private variable REQUEST_METHODS [list "GET" "POST" "PUT" "DELETE" "HEAD"]
 
-		method handle_request {request} {
-			switch [$request getMethod] {
-				"GET" { return [get $request] }
-				"POST" { return [post $request] }
-				"PUT" { return [put $request] }
-				"DELETE" { return [delete $request] }
-				"HEAD" { return [head $request] }
+		method handleRequest {request} {
+			set method [uplevel 2 $request getMethod]
+
+			switch $method {
+				"GET" { set result [get $request] }
+				"POST" { set result [post $request] }
+				"PUT" { set result [put $request] }
+				"DELETE" { set result [delete $request] }
+				"HEAD" { set result [head $request] }
+				"OPTIONS" { set result [options $request] }
 				default { error "NotImplemented" }
 			}
+			return $result
 		}
 
 		method get {request} { error "NotImplemented" }
@@ -25,6 +29,17 @@ namespace eval ::broomride::view {
 		method delete {resquest} { error "NotImplemented" }
 		method head {request} { error "NotImplemented" }
 
+	}
+
+	catch {::itcl::delete class TemplatedView}
+	::itcl::class TemplatedView {
+		inherit ::broomride::view::View
+
+		private variable _template
+
+		constructor {{template ""}} {} {
+			set _template template
+		}
 	}
 }
 

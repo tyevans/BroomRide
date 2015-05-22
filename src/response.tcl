@@ -2,12 +2,12 @@ package require Itcl
 
 namespace eval ::broomride::response {
 
-	namespace export HttpResponse
+	namespace export HttpResponse 
 
-	catch {::itcl::delete class HttpResponse}
 	::itcl::class HttpResponse {
 		private variable _body
 		private variable _headers
+		private variable _contentType "text/html"
 
 		constructor {body {headers 0}} {
 			set _body $body
@@ -15,45 +15,35 @@ namespace eval ::broomride::response {
 			if {![string is false -strict _headers]} {
 				set _headers $headers
 			} else {
-				set _headers {dict create \
-					"Content-Type" "text/html"\
-				}
+				set _headers [list]
 			}
 
 		}
 
-		method send_headers {} {
-			dict for {key value} $_headers {
-				puts "$key: $value"
-			} 
+		method getHeaders {} {
+			return $_headers
 		}
 
-		method send_body {} {
-			puts $_body
+		method setHeaders {headers} {
+			set _headers $headers
+		}
+
+		method setContentType {ct} {
+			set _contentType $ct
+		}
+
+		method getContentType {} {
+			return $_contentType
+		}
+
+		method getBody {} {
+			return $_body
 		}
 
 		method send {
 			send_headers
 			send_body
 		}
-	}
-
-	::itcl::class HttpResponse404 {
-		inherit HttpResponse
-
-		constructor {body {headers 0}} {$body $headers} {
-
-		}
-
-		method send_headers {} {
-			puts "404 Not Found"
-			chain
-		}
-
-	}
-
-	::itcl::class HttpResponseRedirect {
-
 	}
 
 }

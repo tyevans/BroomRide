@@ -1,0 +1,39 @@
+set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
+package require tcltest
+package require broomride 1.0 
+
+package require Itcl
+
+namespace import ::tcltest::*
+namespace import ::broomride::response::*
+
+test response_default_content_type {
+	Test: Default content-type is set if none is specified 
+} -body {
+	HttpResponse resp ""
+	set result [resp getContentType]
+	::itcl::delete object resp
+	return $result
+} -result "text/html"
+
+test response_custom_content_type {
+	Test: Custom content-type is used if specified
+} -body {
+	HttpResponse resp ""
+	resp setContentType "application/json"
+	set result [resp getContentType]
+	::itcl::delete object resp
+	return $result
+} -result "application/json"
+
+test response_custom_headers {
+	Test: Customer headers are sent
+} -body {
+	set headers [dict create "X-Custom-Header" "THISISCUSTOM"]
+	HttpResponse resp "" $headers
+	set result [resp getHeaders]
+	::itcl::delete object resp
+	return $result
+} -result "X-Custom-Header: THISISCUSTOM\r\nContent-Type: text/html\r\n\r\n"
+
+cleanupTests

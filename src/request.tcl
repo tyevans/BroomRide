@@ -4,38 +4,51 @@ namespace eval ::broomride::request {
 
 	namespace export HttpRequest
 
-	catch {::itcl::delete class HttpRequest}
 	::itcl::class HttpRequest {
 		private variable _method
+		private variable _url
 		private variable _headers
 		private variable _query_params
 		private variable _body
 
-		constructor {method headers query_params body} {
-			set _method $method
-			set _headers $headers
-			set _query_params $query_params
-			set _body $body
+		constructor {} {
+
 		}
 
 		method getMethod {} {
+			if {![info exists _method]} {
+				if {[info exists ::env(REQUEST_METHOD)]} {
+					set _method $::env(REQUEST_METHOD)
+				} else {
+					set _method "GET"
+				}
+			}
 			return $_method
 		}
 
-		method getHeaders {} {
-			return $_headers
-		}
-
-		method getHeader {key} {
-			return [dict get $_headers key]
+		method getURL {} {
+			if {![info exists _url]} {
+				if {[info exists ::env(REQUEST_URI)]} {
+					regexp "(.*?)\?" $::env(REQUEST_URI) -> url 
+					set _url $url
+				} else {
+					set _url "/hello"
+				}
+			}
+			return $_url
 		}
 
 		method getQueryParams {} {
-			return $_query_params
-		}
-
-		method getQueryParam {key} {
-			return [dict get $_query_params key]
+			if {![info exists _query_params]} {
+				if {[info exists ::env(REQUEST_URI)]} { 
+					set query_params [dict create]
+					foreach {key value} [::ncgi::nvlist] {
+						dict set query_params $key $value
+					}
+					set _query_params $query_params
+				}
+			}
+			return $_query_params 
 		}
 
 		method getBody {} {
