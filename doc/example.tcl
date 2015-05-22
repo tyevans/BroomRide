@@ -1,5 +1,5 @@
 #!C:\Tcl\bin\tclsh.exe
-set auto_path [linsert $auto_path 0 "[pwd]/../src/"]
+set auto_path [linsert $auto_path 0 {C:\Users\Tyler\workspace\BroomRide\src}]
 
 package require Itcl
 package require broomride 1.0
@@ -7,6 +7,7 @@ package require broomride 1.0
 namespace import ::broomride::application::*
 namespace import ::broomride::route::*
 namespace import ::broomride::view::*
+namespace import ::broomride::response::*
 
 set DEBUG 1
 
@@ -18,8 +19,22 @@ set DEBUG 1
 	}
 }
 
+::itcl::class CatchAllView {
+	inherit ::broomride::view::View
+
+	method handleRequest {request} {
+		uplevel 1 {
+			set response [HttpResponse #auto "404: Not Found"]
+			$response setHeaders [list "Status-Code" 404]
+			return $response
+		}
+	}
+}
+
+
 set routes [list \
 	[Route #auto "/hello" [HelloWorldView #auto]]\
+	[Route #auto ".*" [CatchAllView #auto]]\
 ]
 
 Application app $routes $DEBUG

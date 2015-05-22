@@ -32,7 +32,7 @@ namespace eval ::broomride::request {
 					regexp "(.*?)\?" $::env(REQUEST_URI) -> url 
 					set _url $url
 				} else {
-					set _url "/hello"
+					set _url "/"
 				}
 			}
 			return $_url

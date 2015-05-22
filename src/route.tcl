@@ -18,8 +18,12 @@ namespace eval ::broomride::route {
 			return [expr {[string length $is_match]>0}]
 		}
 
+		method getView {} {
+			return $_view
+		}
+
 		method handleRequest {request} {
-			return [$_view handleRequest $request]
+			return [[$this getView] handleRequest $request]
 		}
 
 	}

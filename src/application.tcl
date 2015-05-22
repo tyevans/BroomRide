@@ -18,7 +18,10 @@ namespace eval ::broomride::application {
 			set request [::broomride::request::HttpRequest #auto]
 			set route [getRoute $request]
 			if {[::itcl::is object $route]} {
-				set response [$route handleRequest $request]
+				set response [[$route getView] handleRequest $request]
+				if {![::itcl::is object $response]} {
+					set response [::broomride::response::HttpResponse #auto $response]
+				}
 			} else {
 				set response [::broomride::response::HttpResponse #auto "404: Not Found"]
 				$response setHeaders [list "Status-Code" 404] 
@@ -37,7 +40,7 @@ namespace eval ::broomride::application {
 				if {[info exists ::env(REQUEST_METHOD)]} {
 					set err [catch {_handle} errMsg]
 					if {![string is false $err]} {
-						puts "Content-Type: text/plain\r\n\r\n"
+						::ncgi::header "text/plain"
 						puts "Error: $err:: $errMsg"
 					}
 				} else {
@@ -49,11 +52,6 @@ namespace eval ::broomride::application {
 		}
 
 		method sendResponse {response} {
-
-			if {![::itcl::is object $response]} {
-				set response [::broomride::response::HttpResponse #auto $response]
-			}
-
 			set contentType [$response getContentType]
 			set headers [$response getHeaders]
 			::ncgi::header $contentType $headers
